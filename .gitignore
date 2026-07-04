@@ -1,0 +1,4 @@
+portrait source files
+*.psd
+Thumbs.db
+.DS_Store
