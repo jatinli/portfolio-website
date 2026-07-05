@@ -44,6 +44,7 @@ body {
   line-height: 1.6;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: rgba(116, 191, 240, 0.18);
 }
 body.is-locked { overflow: hidden; }
 body.has-cursor, body.has-cursor a, body.has-cursor button { cursor: none; }
@@ -383,16 +384,16 @@ ul { list-style: none; }
 .scene-head { display: flex; justify-content: space-between; align-items: baseline; border-top: 1px solid var(--bone-15); padding-top: 16px; }
 .practice-rows { margin-top: clamp(40px, 7vh, 80px); }
 .p-row {
-  display: grid; grid-template-columns: 80px 1fr auto;
+  display: grid; grid-template-columns: 70px 1fr auto;
   align-items: baseline; gap: clamp(16px, 3vw, 48px);
-  padding-block: clamp(22px, 3.6vh, 40px);
+  padding-block: clamp(16px, 2.6vh, 28px);
   border-bottom: 1px solid var(--bone-15);
   position: relative;
 }
 .p-row .p-num { font-family: var(--mono); font-size: 12px; color: var(--bone-35); font-variant-numeric: tabular-nums; transition: color 0.3s ease; }
 .p-row .p-title {
   font-family: var(--display); text-transform: uppercase;
-  font-size: clamp(30px, 5.4vw, 72px); line-height: 1;
+  font-size: clamp(21px, 3.2vw, 40px); line-height: 1.05;
   transition: transform 0.7s var(--ease), color 0.3s ease;
   will-change: transform;
 }
@@ -816,9 +817,11 @@ ul { list-style: none; }
   function measure() {
     vh = innerHeight; vw = innerWidth;
     if (!reduce) {
-      // Horizontal reel: section height = horizontal distance + one viewport
+      // Horizontal reel: section height = horizontal distance + one viewport.
+      // On phones, stretch the section so the reel advances more slowly per swipe.
       const span = Math.max(track.scrollWidth - vw, 0);
-      evidence.style.height = span + vh + "px";
+      const reelStretch = vw <= 860 ? 1.75 : 1;
+      evidence.style.height = span * reelStretch + vh + "px";
     }
     const er = evidence.getBoundingClientRect();
     evTop = er.top + scrollY;
@@ -1056,7 +1059,7 @@ void main(){
     for (const n of ["u_res", "u_t", "u_par", "u_mouse", "u_scroll", "u_c1", "u_c2", "u_c3", "u_c4", "u_bg"]) U[n] = gl.getUniformLocation(prog, n);
 
     canvas.classList.add("is-gl");
-    const rs = 0.7 * Math.min(devicePixelRatio || 1, 1.5);   /* crisp enough for filaments */
+    const rs = (vw <= 860 ? 0.5 : 0.7) * Math.min(devicePixelRatio || 1, 1.5);   /* lighter on phones */
     const MAXDIM = 1500;
     let cw = 0, ch = 0;
     resizeField = () => {
