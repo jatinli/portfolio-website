@@ -287,17 +287,7 @@ ul { list-style: none; }
   font-size: clamp(26px, 3.6vw, 46px); line-height: 1.02; letter-spacing: 0.005em;
 }
 .xp-role span { color: var(--bone-60); }
-.xp-points { margin-top: clamp(16px, 2.4vh, 24px); display: grid; gap: 12px; max-width: 44em; }
-.xp-points li {
-  position: relative; padding-left: 22px;
-  color: var(--bone-60); font-size: clamp(14px, 1.3vw, 16.5px); line-height: 1.6;
-}
-.xp-points li::before {
-  content: ""; position: absolute; left: 0; top: 0.66em;
-  width: 7px; height: 7px; border-radius: 50%; background: var(--signal);
-}
-.xp-points li b { color: var(--bone); font-weight: 600; }
-.xp-stack { margin-top: 20px; color: var(--bone-35); }
+.xp-note { margin-top: 14px; color: var(--bone-60); font-size: clamp(14px, 1.3vw, 17px); max-width: 40em; }
 
 /* ═══ SC.03 — EVIDENCE (horizontal reel) ══════════════════── */
 .evidence { position: relative; }
@@ -539,10 +529,9 @@ ul { list-style: none; }
   /* Experience — stack the date meta above the role, full-width content */
   .scene-head { flex-wrap: wrap; gap: 14px 20px; }
   .cv-btn { padding: 12px 22px; font-size: 12.5px; }
-  .xp-row { grid-template-columns: 1fr; gap: 12px; }
-  .xp-when { flex-direction: row; align-items: baseline; flex-wrap: wrap; gap: 6px 14px; padding-top: 0; }
-  .xp-points { max-width: none; }
-  .xp-stack { margin-top: 16px; }
+  .xp-row { grid-template-columns: 1fr; gap: 10px; }
+  .xp-when { padding-top: 0; }
+  .xp-note { max-width: none; }
 }
 
 /* ═══ REDUCED MOTION ══════════════════════════════════════── */
@@ -569,7 +558,6 @@ ul { list-style: none; }
 <header class="hud">
   <a class="hud-mark" href="#origin">JL<span>.</span>26</a>
   <div class="hud-right">
-    <span class="hud-time mono" id="hudTime">00:00 / 04:00</span>
     <button class="hud-menu" id="menuBtn" aria-expanded="false" aria-controls="indexMenu">Index</button>
   </div>
 </header>
@@ -635,16 +623,10 @@ ul { list-style: none; }
     <article class="xp-row rv">
       <div class="xp-when mono">
         <span class="sig">Jun — Aug 2026</span>
-        <span>Internship</span>
       </div>
       <div class="xp-main">
         <h3 class="xp-role">Data Analytics Intern <span>— Sagitec Solutions</span></h3>
-        <ul class="xp-points">
-          <li>Built an <b>end-to-end predictive-analytics pipeline</b> on large-scale support-ticket data to forecast bug-resolution timelines and surface defect trends across engineering teams.</li>
-          <li>Engineered features from ticket metadata, team-performance indicators and historical resolution patterns to <b>train and evaluate machine-learning models</b>.</li>
-          <li>Ran data cleaning, transformation and exploratory analysis on <b>pension-domain datasets</b>, delivering actionable insight to support business decisions.</li>
-        </ul>
-        <div class="xp-stack mono">Python · Pandas · scikit-learn · Power BI · SQL</div>
+        <p class="xp-note">Predictive-analytics pipelines on large-scale support-ticket data.</p>
       </div>
     </article>
   </div>
@@ -787,7 +769,6 @@ ul { list-style: none; }
       <a href="https://www.linkedin.com/in/jatin-lilani-407416331/" target="_blank" rel="noopener">LinkedIn</a>
     </nav>
     <span id="clock" aria-label="Local time">--:--:-- IST</span>
-    <span>Directed &amp; engineered in-house</span>
   </div>
 </footer>
 
@@ -854,9 +835,6 @@ ul { list-style: none; }
   let cur = scrollY, mx = 0, my = 0, smx = 0, smy = 0;
   let curX = vw / 2, curY = vh / 2, dotX = curX, dotY = curY, ringX = curX, ringY = curY;
   const filament = $("#filament");
-  const hudTime = $("#hudTime");
-  const RUNTIME = 240; // the film is "4 minutes long"
-  const fmt = (s) => `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(Math.floor(s % 60)).padStart(2, "0")}`;
 
   if (fine && !reduce) {
     addEventListener("pointermove", (e) => {
@@ -877,11 +855,9 @@ ul { list-style: none; }
     smx += (mx - smx) * 0.06;
     smy += (my - smy) * 0.06;
 
-    // filament + timecode
+    // scroll-progress filament
     const gp = clamp(cur / docLen, 0, 1);
     filament.style.transform = `scaleX(${gp})`;
-    const tc = fmt(gp * RUNTIME) + " / " + fmt(RUNTIME);
-    if (hudTime.textContent !== tc) hudTime.textContent = tc;
 
     if (!reduce) {
       // SC.01 — hero drifts apart as the camera pulls back
